@@ -104,11 +104,7 @@ const updateContact = async (contactId, body) => {
     return console.error(error.message);
   }
 };
-updateContact(1, {
-  name: "Allen Raymond",
-  email: "nulla.ante@vestibul.co.uk",
-  phone: "(992) 914-3792",
-});
+
 module.exports = {
   listContacts,
   getContactById,
@@ -116,5 +112,3 @@ module.exports = {
   addContact,
   updateContact,
 };
-
-updateContact("123213");
