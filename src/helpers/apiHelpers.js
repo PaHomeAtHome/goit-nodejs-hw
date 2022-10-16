@@ -1,4 +1,4 @@
-// const { GoIt26NodeError } = require("./errors");
+const { GoIt26NodeError } = require("./errors");
 
 const asyncWrapper = (controller) => {
   return (req, res, next) => {
