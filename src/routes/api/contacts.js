@@ -2,7 +2,6 @@ const express = require("express");
 
 const { asyncWrapper } = require("../../helpers/apiHelpers");
 
-const modelsMiddleware = require("../../middlewares/models");
 const {
   addContactValidation,
 } = require("../../middlewares/validationMiddleware");
@@ -16,8 +15,6 @@ const {
 } = require("../../controllers/contactsController");
 
 const router = express.Router();
-
-router.use(modelsMiddleware);
 
 router.get("/", asyncWrapper(getContactsController));
 
