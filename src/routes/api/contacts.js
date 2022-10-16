@@ -12,6 +12,7 @@ const {
   deleteContactsController,
   getContactsByIdController,
   getContactsController,
+  updateStatusContactController,
 } = require("../../controllers/contactsController");
 
 const router = express.Router();
@@ -29,5 +30,10 @@ router.put(
 );
 
 router.delete("/:contactId", asyncWrapper(deleteContactsController));
+
+router.patch(
+  "/:contactId/favorite",
+  asyncWrapper(updateStatusContactController)
+);
 
 module.exports = router;
