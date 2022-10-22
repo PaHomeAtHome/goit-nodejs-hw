@@ -5,7 +5,10 @@ const { NotAuthorizedError } = require("../helpers/errors");
 
 const registration = async (email, password) => {
   const user = new User({ email, password });
-  await user.save();
+
+  const result = await user.save();
+  const { subscription } = result;
+  return { email, subscription };
 };
 
 const login = async (email, password) => {

@@ -26,9 +26,17 @@ class NotAuthorizedError extends GoIt26NodeError {
   }
 }
 
+class ConflictError extends GoIt26NodeError {
+  constructor(message) {
+    super(message);
+    this.status = 409;
+  }
+}
+
 module.exports = {
   GoIt26NodeError,
   ValidationError,
   WrongParametersError,
   NotAuthorizedError,
+  ConflictError,
 };
