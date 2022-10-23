@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const { ConflictError, ValidationError } = require("../helpers/errors");
 
 const userSchema = new mongoose.Schema({
   password: {
@@ -22,6 +23,14 @@ const userSchema = new mongoose.Schema({
 userSchema.pre("save", async function () {
   if (this.isNew) {
     this.password = await bcrypt.hash(this.password, 10);
+  }
+});
+
+userSchema.post("save", function (error, doc, next) {
+  if (error.code === 11000) {
+    next(new ConflictError("Email in use"));
+  } else {
+    next(new ValidationError(error));
   }
 });
 
