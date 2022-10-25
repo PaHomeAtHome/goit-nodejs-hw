@@ -58,9 +58,15 @@ const currentUser = async (userId) => {
   return { email, subscription };
 };
 
+const avatarUser = async (avatarFile) => {
+  console.log(avatarFile);
+  return avatarFile;
+};
+
 module.exports = {
   registration,
   login,
   logout,
   currentUser,
+  avatarUser,
 };
