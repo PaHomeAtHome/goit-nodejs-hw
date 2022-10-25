@@ -1,5 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const gravatar = require("gravatar");
+
 const { User } = require("../db/userModel");
 const {
   NotAuthorizedError,
@@ -7,11 +9,15 @@ const {
 } = require("../helpers/errors");
 
 const registration = async (email, password) => {
-  const user = new User({ email, password });
+  const httpsUrl = gravatar.url(email, {
+    protocol: "https",
+  });
+
+  const user = new User({ email, password, avatarURL: httpsUrl });
 
   const result = await user.save();
   const { subscription } = result;
-  return { email, subscription };
+  return { email, subscription, avatarURL: httpsUrl };
 };
 
 const login = async (email, password) => {
