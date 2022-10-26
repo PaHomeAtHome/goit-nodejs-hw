@@ -1,6 +1,9 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
+const Jimp = require("jimp");
+require("dotenv").config();
+const PORT = process.env.PORT || 3000;
 
 const { User } = require("../db/userModel");
 const {
@@ -58,9 +61,20 @@ const currentUser = async (userId) => {
   return { email, subscription };
 };
 
-const avatarUser = async (avatarFile) => {
-  console.log(avatarFile);
-  return avatarFile;
+const avatarUser = async (avatarName, user) => {
+  const name = avatarName;
+  Jimp.read(`./tmp/${name}`, (err, avatar) => {
+    if (err) throw err;
+    avatar.cover(250, 250).write(`./public/avatars/${name}`);
+  });
+  const avatarURL = `localhost:${PORT}/api/avatars/${name}`;
+  await User.findByIdAndUpdate(
+    { _id: user._id },
+    {
+      $set: { avatarURL: avatarURL },
+    }
+  );
+  return avatarURL;
 };
 
 module.exports = {
