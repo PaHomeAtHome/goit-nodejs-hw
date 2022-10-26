@@ -1,5 +1,10 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const gravatar = require("gravatar");
+const Jimp = require("jimp");
+require("dotenv").config();
+const PORT = process.env.PORT || 3000;
+
 const { User } = require("../db/userModel");
 const {
   NotAuthorizedError,
@@ -7,11 +12,15 @@ const {
 } = require("../helpers/errors");
 
 const registration = async (email, password) => {
-  const user = new User({ email, password });
+  const httpsUrl = gravatar.url(email, {
+    protocol: "https",
+  });
+
+  const user = new User({ email, password, avatarURL: httpsUrl });
 
   const result = await user.save();
   const { subscription } = result;
-  return { email, subscription };
+  return { email, subscription, avatarURL: httpsUrl };
 };
 
 const login = async (email, password) => {
@@ -52,9 +61,26 @@ const currentUser = async (userId) => {
   return { email, subscription };
 };
 
+const avatarUser = async (avatarName, user) => {
+  const name = avatarName;
+  Jimp.read(`./tmp/${name}`, (err, avatar) => {
+    if (err) throw err;
+    avatar.cover(250, 250).write(`./public/avatars/${name}`);
+  });
+  const avatarURL = `localhost:${PORT}/api/avatars/${name}`;
+  await User.findByIdAndUpdate(
+    { _id: user._id },
+    {
+      $set: { avatarURL: avatarURL },
+    }
+  );
+  return avatarURL;
+};
+
 module.exports = {
   registration,
   login,
   logout,
   currentUser,
+  avatarUser,
 };
