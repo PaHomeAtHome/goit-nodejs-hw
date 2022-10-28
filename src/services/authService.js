@@ -37,14 +37,36 @@ const registration = async (email, password) => {
     to: email, // Change to your recipient
     from: EMAIL, // Change to your verified sender
     subject: "Registration verification",
-    text: `Please confirm Your email adress GET localhost:${PORT}/api/users/verify/${verificationToken}`,
-    html: `<strong>Please confirm Your email adress GET localhost:${PORT}/api/users/verify/${verificationToken} </strong>`,
+    text: `Please confirm Your email adress GET: localhost:${PORT}/api/users/verify/${verificationToken}`,
+    html: `<strong>Please confirm Your email adress GET: localhost:${PORT}/api/users/verify/${verificationToken} </strong>`,
   };
 
   sgMail.send(msg);
 
   const { subscription } = result;
   return { email, subscription, avatarURL: httpsUrl };
+};
+
+const verify = async (email) => {
+  if (!email) {
+    throw new WrongParametersError("missing required field email");
+  }
+
+  const verification = await User.findOne({ email });
+
+  if (!verification.verificationToken) {
+    throw new WrongParametersError("Verification has already been passed");
+  }
+
+  const msg = {
+    to: email, // Change to your recipient
+    from: EMAIL, // Change to your verified sender
+    subject: "Registration verification",
+    text: `Please confirm Your email adress GET: localhost:${PORT}/api/users/verify/${verification.verificationToken}`,
+    html: `<strong>Please confirm Your email adress GET: localhost:${PORT}/api/users/verify/${verification.verificationToken} </strong>`,
+  };
+
+  sgMail.send(msg);
 };
 
 const registrationVerification = async (verificationToken) => {
@@ -129,4 +151,5 @@ module.exports = {
   logout,
   currentUser,
   avatarUser,
+  verify,
 };

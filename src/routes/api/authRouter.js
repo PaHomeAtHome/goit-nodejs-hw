@@ -31,10 +31,12 @@ const {
   currentUserController,
   avatarUserController,
   registrationVerificationController,
+  verifyController,
 } = require("../../controllers/authController");
 const uploadMiddleware = multer({ storage });
 
 router.post("/registration", asyncWrapper(registrationController));
+router.post("/verify", asyncWrapper(verifyController));
 router.get(
   "/verify/:verificationToken",
   asyncWrapper(registrationVerificationController)
