@@ -30,10 +30,15 @@ const {
   logoutController,
   currentUserController,
   avatarUserController,
+  registrationVerificationController,
 } = require("../../controllers/authController");
 const uploadMiddleware = multer({ storage });
 
 router.post("/registration", asyncWrapper(registrationController));
+router.get(
+  "/verify/:verificationToken",
+  asyncWrapper(registrationVerificationController)
+);
 router.post("/login", asyncWrapper(loginController));
 router.post("/logout", authMiddleware, asyncWrapper(logoutController));
 router.get("/current", authMiddleware, asyncWrapper(currentUserController));
